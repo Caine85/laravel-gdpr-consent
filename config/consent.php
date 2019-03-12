@@ -1,6 +1,12 @@
 <?php
 return [
 
+    // Prefix applied to a string to indicate
+    // that you are acting on a consent.
+    // It is necessary to apply this prefix to the
+    // name of the consents in the inputs of a form.
+    'prefix' => 'consent_',
+
     'treatments' => [
         [
             // A logical name for your treatment.

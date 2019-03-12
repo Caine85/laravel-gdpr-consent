@@ -124,14 +124,14 @@ data processing events like in the following example.
 @foreach(Consent::treatments() as $treatment)
 	<div class="checkbox">
 		<label>
-			<input name="consent_{{ $treatment->id }}" type="checkbox">
+			<input name="{{ config('consent.prefix') . $treatment->id }}" type="checkbox">
 			{{ trans($treatment->description) }}
 		</label>
 	</div>
 @endforeach
 ```
 
-> Note that your `checkbox` name must match `consent_TREATMENTID`
+> Note that your `checkbox` name must match `PREFIXTREATMENTID`
 
 ### Validate checkboxes in your controller
 
@@ -163,14 +163,14 @@ public function postRegister(Request $request)
 @foreach(Consent::treatments() as $treatment)
 	<div class="checkbox">
 		<label>
-			<input {{ Consent::exists($user, $treatment) ? 'checked' : '' }} name="{{ $treatment->id }}" type="checkbox">
+			<input {{ Consent::exists($user, $treatment) ? 'checked' : '' }} name="{{ config('consent.prefix') . $treatment->id }}" type="checkbox">
 			{{ trans($treatment->description) }}
 		</label>
 	</div>
 @endforeach
 ```
 
-> Note that for the update handler the checkbox name should be the treatment id.
+> Note that your `checkbox` name must match `PREFIXTREATMENTID`
 
 ### Save user's consent changes
 ```php

@@ -161,7 +161,7 @@ protected function removeMeConfig($key) {
         $activeTreatments = $this->treatments();
 
         foreach ($activeTreatments as $treatment) {
-            if ($this->checkFieldIsChecked($input, $treatment->id))
+            if ($this->checkFieldIsChecked($input, config('consent.prefix') . $treatment->id))
             {
                 $this->grant([$treatment], $subject);
                 continue;
@@ -259,11 +259,11 @@ protected function removeMeConfig($key) {
 
         // Cycle all treatments and check against input.
         foreach ($treatments as $treatment) {
-            if ($this->checkFieldIsInvalid($treatment, $input, "consent_{$treatment->id}")) {
+            if ($this->checkFieldIsInvalid($treatment, $input, config('consent.prefix') . $treatment->id)) {
                 return false;
             }
 
-            if ($this->checkFieldIsChecked($input, "consent_{$treatment->id}")) {
+            if ($this->checkFieldIsChecked($input, config('consent.prefix') . $treatment->id)) {
                 $consents[] = $treatment;
             }
         }
