@@ -22,8 +22,22 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"Foothing\\Laravel\\Consent\\": "src",
-			"tests\\Foothing\\Laravel\\Consent\\": "tests"
+			"Foothing\\Laravel\\Consent\\": "src/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"tests\\Foothing\\Laravel\\Consent\\": "tests/"
+		}
+	},
+	"extra": {
+		"laravel": {
+			"providers": [
+				"Foothing\\Laravel\\Consent\\ConsentServiceProvider"
+			],
+			"aliases": {
+				"Excel": "Foothing\\Laravel\\Consent\\Facades\\Consent"
+			}
 		}
 	}
 }
