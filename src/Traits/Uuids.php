@@ -1,6 +1,6 @@
 <?php namespace Foothing\Laravel\Consent\Traits;
 
-use Webpatser\Uuid\Uuid;
+use Illuminate\Support\Str;
 
 trait Uuids {
 
@@ -10,7 +10,7 @@ trait Uuids {
 
         static::creating(function ($model)
         {
-            $model->{$model->getKeyName()} = Uuid::generate()->string;
+            $model->{$model->getKeyName()} = Str::uuid();
         });
     }
 }
