@@ -10,7 +10,7 @@ class ConsentSetup extends Command
      *
      * @var string
      */
-    protected $signature = 'consent';
+    protected $signature = 'consent:setup';
 
     /**
      * The console command description.

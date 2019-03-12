@@ -1,5 +1,6 @@
 <?php namespace Foothing\Laravel\Consent;
 
+use Foothing\Laravel\Consent\Commands\ConsentSetup;
 use Illuminate\Support\ServiceProvider;
 
 class ConsentServiceProvider extends ServiceProvider {
@@ -15,6 +16,12 @@ class ConsentServiceProvider extends ServiceProvider {
         $this->publishes([
             __DIR__.'/../migrations/' => database_path('migrations')
         ], 'migrations');
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                ConsentSetup::class,
+            ]);
+        }
     }
 
     public function register()

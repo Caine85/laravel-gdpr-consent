@@ -29,15 +29,15 @@ Add alias in `config/app.php` if you want to use the facade
 
 Publish config and migrations
 
-`php artisan vendor:publish --tag=config`
+`php artisan vendor:publish --provider="Foothing\Laravel\Consent\ConsentServiceProvider" --tag=config`
 
-`php artisan vendor:publish --tag=migrations`
+`php artisan vendor:publish --provider="Foothing\Laravel\Consent\ConsentServiceProvider" --tag=migrations`
 
 Configure as needed, then run the migration
 `php artisan migrate`
 
 Setup the treatments table
-`php artisan consent`
+`php artisan consent:setup`
 
 ## Quick start
 
