@@ -181,7 +181,7 @@ protected function removeMeConfig($key) {
      */
     public function treatments($requiredOnly = false)
     {
-        $query = Treatment::whereActive(true)->orderBy('weight');
+        $query = Treatment::whereActive(true)->orderBy('priority');
 
         if ($requiredOnly) {
             $query->whereRequired($requiredOnly);

@@ -20,7 +20,7 @@ class GdprConsent extends Migration
             $table->text('description');
             $table->string('documentVersion')->nullable()->default(null);
             $table->string('documentUrl')->nullable()->default(null);
-            $table->tinyInteger('weight');
+            $table->tinyInteger('priority');
             $table->timestamps();
         });
 

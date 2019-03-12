@@ -30,11 +30,9 @@ return [
             // or anywhere in your UI.
             'description' => 'gdpr.privacy.text',
 
-            // UI weight, use this to choose what should be
-            // listed first.
-
-            // @TODO rename priority?
-            'weight' => 0,
+            // Set what should be
+            // listed first in UI.
+            'priority' => 0,
         ],
         [
             'name' => 'gdpr.marketing',
@@ -43,7 +41,7 @@ return [
             'active' => true,
             'required' => false,
             'description' => 'gdpr.marketing.text',
-            'weight' => 1,
+            'priority' => 1,
         ],
     ]
 
