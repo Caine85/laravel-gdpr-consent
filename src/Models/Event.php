@@ -17,6 +17,10 @@ class Event extends Model
         return $this->belongsTo(Consent::class);
     }
 
+    public function getPayloadAttribute($value) {
+        return decrypt($value);
+    }
+
     public function setPayloadAttribute($value)
     {
         $this->attributes['payload'] = Crypt::encrypt(json_encode($value));

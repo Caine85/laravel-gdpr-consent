@@ -10,4 +10,23 @@ class Treatment extends Model {
     protected $table = 'gdpr_treatment';
 
     public $incrementing = false;
+
+    /**
+     * Get the array of input names where the Treatment is required
+     *
+     * @param $value
+     * @return array
+     */
+    public function getRequiredWithAttribute($value) {
+        return json_decode($value, true);
+    }
+
+    /**
+     * Set the array of input names where the Treatment is required
+     *
+     * @param $value
+     */
+    public function setRequiredWithAttribute($value) {
+        $this->attributes['required_with'] = json_encode($value);
+    }
 }
