@@ -7,6 +7,10 @@ return [
     // name of the consents in the inputs of a form.
     'prefix' => 'consent_',
 
+    // You can choose if consent is deleted or not
+    // after ConsentSubject deletion
+    'removeConsentOnErase' => true,
+
     'treatments' => [
         [
             // A logical name for your treatment.
@@ -31,6 +35,14 @@ return [
 
             // Set if this treatment is mandatory or optional.
             'required' => true,
+
+            // Set if this treatment is required when an input
+            // name is present.
+            // Must be unset or an array.
+            // This part is optional.
+            'required_with' => [
+                'first-name'
+            ],
 
             // A description text to be shown near a checkbox
             // or anywhere in your UI.

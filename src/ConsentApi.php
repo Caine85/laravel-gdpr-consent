@@ -112,7 +112,7 @@ class ConsentApi {
     }
 
 protected function removeMeConfig($key) {
-    return false;
+        return Config::get($key);
 }
 
     public function revokeConsent(Consent $consent) {
@@ -133,7 +133,7 @@ protected function removeMeConfig($key) {
 
             $this->log($event);
 
-            if ($this->removeMeConfig("gdpr.removeConsentOnRevoke"))
+            if ($this->removeMeConfig("gdpr-consent.removeConsentOnErase"))
             {
                 Consent::whereSubjectId($subject->getSubjectid())->delete();
 
