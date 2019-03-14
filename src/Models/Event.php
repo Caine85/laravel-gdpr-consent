@@ -10,11 +10,16 @@ class Event extends Model
 
     protected $table = 'gdpr_event';
 
-    public $fillable = ['id', 'action', 'consent_id', 'subject_id', 'payload'];
+    public $fillable = ['id', 'action', 'consent_id', 'treatment_id', 'subject_id', 'payload'];
 
     public function consent()
     {
         return $this->belongsTo(Consent::class);
+    }
+
+    public function treatment()
+    {
+        return $this->belongsTo(Treatment::class);
     }
 
     public function getPayloadAttribute($value) {

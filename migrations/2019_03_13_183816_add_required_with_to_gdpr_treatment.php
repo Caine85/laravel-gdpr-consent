@@ -25,7 +25,7 @@ class AddRequiredWithToGdprTreatment extends Migration
     public function down()
     {
         Schema::table('gdpr_treatment', function(Blueprint $table){
-            $table->drop_column('required_with');
+            $table->dropColumn('required_with');
         });
     }
 }

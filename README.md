@@ -1,9 +1,18 @@
 # Laravel GDPR Consent
 
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Caine85/laravel-gdpr-consent/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Caine85/laravel-gdpr-consent/?branch=master)
+[![Build Status](https://scrutinizer-ci.com/g/Caine85/laravel-gdpr-consent/badges/build.png?b=master)](https://scrutinizer-ci.com/g/Caine85/laravel-gdpr-consent/build-status/master)
+[![License](https://poser.pugx.org/soved/laravel-gdpr/license)](https://packagist.org/packages/soved/laravel-gdpr)
+
 Light-weight Laravel 5 package
 for user's consents and data processing records.
 
-## Install
+## Requirements
+
+- PHP >= 7.0.0
+- Laravel >= 5.5
+
+## Installation
 
 Via composer
 

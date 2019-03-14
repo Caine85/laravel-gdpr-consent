@@ -53,6 +53,7 @@ class ConsentApi {
 
             $event = new Event([
                 'consent_id' => $consent->id,
+                'treatment_id' => $treatment->id,
                 'subject_id' => $subject->getSubjectid(),
                 'action' => 'consent.grant',
             ]);
@@ -93,6 +94,7 @@ class ConsentApi {
 
         $event = new Event([
             'consent_id' => null,
+            'treatment_id' => $treatmentId,
             'subject_id' => $subject->getSubjectid(),
             'action' => 'consent.revoke',
         ]);
@@ -147,7 +149,7 @@ protected function removeMeConfig($key) {
     /**
      * Updates consents.
      *
-     * @param array          $input
+     * @param array $input
      * The form data. Each item in the array should be like
      * [
      *      'treatmentId1' => 'on',
@@ -155,10 +157,12 @@ protected function removeMeConfig($key) {
      * ]
      *
      * @param ConsentSubject $subject
+     *
+     * @param null|string $treatmentName The name of the treatment to update.
      */
-    public function update(array $input, ConsentSubject $subject)
+    public function update(array $input, ConsentSubject $subject, $treatmentName = null)
     {
-        $activeTreatments = $this->treatments();
+        $activeTreatments = $this->treatments($treatmentName);
 
         foreach ($activeTreatments as $treatment) {
             if ($this->checkFieldIsChecked($input, Config::get('consent.prefix') . $treatment->id))
@@ -175,22 +179,23 @@ protected function removeMeConfig($key) {
      * Return the Treatment Collection.
      *
      * @param bool $requiredOnly Whether to return all treatments or only the required ones.
-     * @param null|string $name The name of the treatment to find.
+     * @param null|string|array $names The name of the treatment to find.
      *
      * @return Collection
      */
-    public function treatments($requiredOnly = false, $name = null)
+    public function treatments($requiredOnly = false, $names = null)
     {
         $query = Treatment::whereActive(true)->orderBy('priority');
 
-        if (is_string($requiredOnly)) $name = $requiredOnly;
+        if (is_string($requiredOnly)) $names = $requiredOnly;
 
         if ($requiredOnly && is_bool($requiredOnly)) {
             $query->whereRequired($requiredOnly);
         }
 
-        if ($name) {
-           $query->whereName($name);
+        if ($names) {
+            $names = is_array($names) ? $names : [$names];
+            $query->whereIn('name', $names);
         }
 
         return $query->get();
@@ -249,17 +254,28 @@ protected function removeMeConfig($key) {
      *      'treatment_002' => 'on'
      * ]
      *
-     * @param bool $onlyPresent
+     * @param bool|string|array $onlyPresent
      * Whether must be validate only present treatments or not.
+     *
+     * @param null|string|array $treatmentsName
+     * The treatments to be validate, if null all treatments will be validate.
      *
      * @return array|bool
      * The array of validated consents in case of success, false for failure.
      *
      * @throws NoActiveTreatmentsException
      */
-    public function validate(array $input, $onlyPresent = false) {
+    public function validate(array $input, $onlyPresent = false, $treatmentsName = null) {
         $consents = [];
-        $treatments = Treatment::whereActive(true)->get();
+
+        // If second parameter is not a bool we assume that $onlyPresent is instead $treatmentName parameter
+        if (!is_bool($onlyPresent)) {
+            $treatmentsName = $onlyPresent;
+            $onlyPresent = false;
+        }
+
+        // We retrieve all treatments or only specified treatments
+        $treatments = ($treatmentsName != null ? $this->treatments($treatmentsName) : Treatment::whereActive(true)->get());
 
         // No configured treatments.
         if (! $treatments->count()) {
@@ -317,7 +333,9 @@ protected function removeMeConfig($key) {
      * @return bool
      */
     public function checkFieldIsChecked(array $fields, $fieldName) {
-        return isset($fields[$fieldName]) && $fields[$fieldName] == 'on';
+        return
+            isset($fields[Config::get('gdpr-consent.prefix') . $fieldName]) &&
+            $fields[Config::get('gdpr-consent.prefix') . $fieldName] == 'on';
     }
 
     /**
@@ -332,7 +350,8 @@ protected function removeMeConfig($key) {
      * @return bool
      */
     public function checkTreatmentIsRequired(Treatment $treatment, array $fields) {
-        return $treatment->required ||
+        return
+            $treatment->required ||
             (isset($treatment->required_with) && $this->array_keys_exists($treatment->required_with, $fields));
     }
 
@@ -363,6 +382,16 @@ protected function removeMeConfig($key) {
             ->get();
     }
 
+    /**
+     * Return true if a treatment exists for a subject,
+     * false if it not exists.
+     *
+     * @param ConsentSubject $subject
+     *
+     * @param Treatment $treatment
+     *
+     * @return bool
+     */
     public function exists(ConsentSubject $subject, Treatment $treatment)
     {
         return $subject->consents()->whereTreatmentId($treatment->id)->first() != null;
