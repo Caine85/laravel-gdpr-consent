@@ -90,10 +90,6 @@ class ConsentApi {
             ->whereSubjectId($subject->getSubjectid())
             ->first();
 
-        if (! $consent) {
-            return true;
-        }
-
         $event = new Event([
             'consent_id' => null,
             'treatment_id' => $treatmentId,
@@ -101,11 +97,15 @@ class ConsentApi {
             'action' => 'consent.revoke',
         ]);
 
-        \DB::transaction(function() use ($consent, $event)
+        $this->log($event);
+
+        if (! $consent) {
+            return true;
+        }
+
+        \DB::transaction(function() use ($consent)
         {
             $consent->delete();
-
-            $this->log($event);
         });
 
         return $event;
