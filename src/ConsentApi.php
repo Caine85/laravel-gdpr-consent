@@ -7,6 +7,8 @@ use Foothing\Laravel\Consent\Models\Consent;
 use Foothing\Laravel\Consent\Models\Event;
 use Foothing\Laravel\Consent\Models\Treatment;
 use Foothing\Laravel\Consent\Repositories\ConsentRepository;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Request;
@@ -180,14 +182,15 @@ protected function removeMeConfig($key) {
      *
      * @param bool $requiredOnly Whether to return all treatments or only the required ones.
      * @param null|string|array $names The name of the treatment to find.
+     * @param bool $returnQuery Whether to return treatments or only the query.
      *
-     * @return Collection
+     * @return Collection|Builder|QueryBuilder
      */
-    public function treatments($requiredOnly = false, $names = null)
+    public function treatments($requiredOnly = false, $names = null, $returnQuery = false)
     {
         $query = Treatment::whereActive(true)->orderBy('priority');
 
-        if (is_string($requiredOnly)) $names = $requiredOnly;
+        if (is_string($requiredOnly) || is_array($requiredOnly)) $names = $requiredOnly;
 
         if ($requiredOnly && is_bool($requiredOnly)) {
             $query->whereRequired($requiredOnly);
@@ -198,7 +201,7 @@ protected function removeMeConfig($key) {
             $query->whereIn('name', $names);
         }
 
-        return $query->get();
+        return ($returnQuery ? $query : $query->get());
     }
 
     /**
